@@ -49,7 +49,9 @@ sudo playwright install-deps
 ### 4. 运行程序
 python project/app.py
 
+程序启动后，请在浏览器中访问 http://127.0.0.1:80 (或你服务器的实际 IP) 查看效果。
 
+##
 ## 📸 运行截图
 
 ### 主模块
@@ -58,5 +60,5 @@ python project/app.py
 ### 详细检测报告页
 <img width="600" alt="详细报告" src="https://github.com/user-attachments/assets/c4f28e3b-2a1f-44eb-876d-3eb9c894a33c" />
 
-### 历史数据库
+### 用户历史数据库
 <img width="600" alt="历史记录" src="https://github.com/user-attachments/assets/25add7d8-79c8-4ab4-ab4a-efffd6e0214a" />
