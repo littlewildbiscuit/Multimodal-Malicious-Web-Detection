@@ -1,6 +1,6 @@
 # 🛡️ 多模态恶意网页检测程序 (Multimodal Malicious Web Detection)
 
-> 本项目是我的课程设计作品。基于多模态特征（如网页文本内容与网页截图视觉特征），实现对恶意网页的高效检测与拦截。
+> 网络综合课程设计。基于多模态特征（如网页文本内容与网页截图视觉特征），实现对恶意网页的高效检测与拦截。
 
 ## 🌟 项目简介
 随着网络攻击手段的升级，传统的单一特征检测已经难以应对复杂的恶意网页。本项目通过提取网页的**多模态特征**（结合了文本、结构以及视觉表现），利用机器学习/深度学习算法进行综合研判，并提供了一个直观的 Web 可视化界面供用户交互。
@@ -29,8 +29,11 @@
 
 ### 1. 克隆项目与准备环境
 建议使用虚拟环境（Virtual Environment）以避免依赖冲突：
-# 创建并激活虚拟环境
+
+创建并激活虚拟环境
+
 python3 -m venv venv
+
 source venv/bin/activate
 
 ### 2. 安装 Python 依赖
@@ -38,19 +41,22 @@ pip install -r requirements.txt
 
 ### 3. 安装 Playwright 浏览器内核及系统依赖
 由于本项目依赖 Playwright 进行网页动态渲染与截图，必须执行以下命令安装 Chromium 内核及相关系统依赖：
+
 playwright install chromium
+
 sudo playwright install-deps
 
 ### 4. 运行程序
 python project/app.py
 
 
-📸 运行截图
+## 📸 运行截图
 
-    主界面
+### 主模块
+<img width="600" alt="核心模块" src="https://github.com/user-attachments/assets/9d8df687-379e-4289-9cc7-d40ffd42bffe" />
 
-    ![alt text](【这里换成你的图片链接】)
+### 详细检测报告页
+<img width="600" alt="详细报告" src="https://github.com/user-attachments/assets/c4f28e3b-2a1f-44eb-876d-3eb9c894a33c" />
 
-    检测结果页
-
-    ![alt text](【这里换成你的图片链接】)
+### 历史数据库
+<img width="600" alt="历史记录" src="https://github.com/user-attachments/assets/25add7d8-79c8-4ab4-ab4a-efffd6e0214a" />
