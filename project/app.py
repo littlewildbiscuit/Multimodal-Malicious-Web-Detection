@@ -10,7 +10,6 @@ import json
 import time
 from flask import Flask, render_template, request, redirect, url_for, flash
 from models import db, User, BlackWhiteList, DetectionRecord
-# ✅ 只需要 Playwright，不需要 Selenium 了
 from playwright.async_api import async_playwright
 from flask_login import (
     LoginManager,
@@ -46,7 +45,7 @@ def get_advanced_visual_features(img_path, bins=8):
 
     try:
         with Image.open(img_path) as img:
-            # 强制统一缩放
+            # 统一缩放
             img = img.convert('RGB').resize((256, 256))
             img_array = np.array(img)
             
@@ -69,7 +68,7 @@ def get_advanced_visual_features(img_path, bins=8):
     
     return result_list
 
-# === 核心：Playwright 一站式服务 (HTML + 截图) ===
+# === 核心：Playwright (HTML + 截图) ===
 async def extract_features(url):
     """
     使用 Playwright 同时获取 HTML 和 截图，效率翻倍！
@@ -107,10 +106,10 @@ async def extract_features(url):
                 await page.goto(url, timeout=15000, wait_until='domcontentloaded')
                 await asyncio.sleep(1) # 等待渲染
                 
-                # === 🅰️ 获取 HTML ===
+                # === 获取 HTML ===
                 html_content = await page.content()
                 
-                # === 🅱️ 直接截图 (新功能！) ===
+                # === 直接截图 ===
                 # full_page=True 意味着自动滚动截取长图，效果更好
                 try:
                     print(f"📸 Playwright 正在截图: {url}")
@@ -157,7 +156,7 @@ async def extract_features(url):
                 if os.path.exists(temp_img_path):
                     os.remove(temp_img_path)
 
-            # === 🧬 最终融合 ===
+            # === 最终融合 ===
             code_feats = [html_length, script_length, script_ratio, js_entropy, num_iframe, num_eval, num_document_write]
             final_features = [code_feats + visual_feats] 
         
@@ -394,6 +393,5 @@ with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
-    # host='0.0.0.0' 表示允许任何电脑访问（不仅仅是本机）
-    # port=5000 是端口号
+    # 允许任何IP访问
     app.run(host='0.0.0.0', port=5000, debug=False)
