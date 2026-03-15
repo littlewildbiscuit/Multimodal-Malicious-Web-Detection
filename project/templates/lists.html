@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>黑白名单管理</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f2f5; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+        .tag { padding: 4px 8px; border-radius: 4px; font-size: 0.8em; color: white; }
+        .tag.black { background: #dc3545; }
+        .tag.white { background: #28a745; }
+        .btn-del { color: red; text-decoration: none; }
+        .nav { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/">⬅️ 返回检测大厅</a>
+        </div>
+
+        <h2>🛡️ 黑白名单管理</h2>
+
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <form action="/add_rule" method="POST" style="display: flex; gap: 10px;">
+                <input type="text" name="url" placeholder="网址 (http://...)" required style="flex: 2; padding: 8px;">
+                <input type="text" name="note" placeholder="备注 (可选)" style="flex: 1; padding: 8px;">
+                <select name="list_type" style="padding: 8px;">
+                    <option value="white">🟢 白名单 (安全)</option>
+                    <option value="black">🔴 黑名单 (恶意)</option>
+                </select>
+                <button type="submit" style="padding: 8px 15px; background: #007bff; color: white; border: none; cursor: pointer;">添加</button>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>网址</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rule in rules %}
+                <tr>
+                    <td>
+                        <span class="tag {{ rule.list_type }}">
+                            {{ '黑名单' if rule.list_type == 'black' else '白名单' }}
+                        </span>
+                    </td>
+                    <td>{{ rule.url }}</td>
+                    <td>{{ rule.note }}</td>
+                    <td><a href="/delete_rule/{{ rule.id }}" class="btn-del">删除</a></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" style="text-align: center;">暂无名单数据</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

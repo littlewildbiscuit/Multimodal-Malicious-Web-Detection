@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>检测大厅 - 恶意网页检测系统</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .nav {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #1557b0;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .safe {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        :root {
+            --bar-color: {
+                    {
+                    bar_color|default('#ccc')
+                }
+            }
+
+            ;
+
+            --bar-width: {
+                    {
+                    score|default('0')
+                }
+            }
+
+            %;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav">
+        <span>当前用户: {{ current_user.username }}</span> |
+        <a href="/lists">📋 黑白名单管理</a> |
+        <a href="/records">🕒 历史记录</a> | <a href="/logout">退出</a>
+    </div>
+    <div class="container">
+        <h1>🔍 恶意网页在线检测</h1>
+        <form action="/predict" method="POST">
+            <textarea name="urls" rows="5" placeholder="请输入要检测的网址，每行一个。" required
+                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: sans-serif; box-sizing: border-box; resize: vertical;"></textarea>
+
+            <button type="submit" style="margin-top: 15px;">🚀 批量智能分析</button>
+        </form>
+
+        {% if results %}
+        <div class="result-box" style="display: block; text-align: left; margin-top: 30px;">
+            <h3>📊 批量检测报告</h3>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                <thead>
+                    <tr style="background: #f8f9fa; border-bottom: 2px solid #ddd;">
+                        <th style="padding: 10px; text-align: left;">网址</th>
+                        <th style="padding: 10px; text-align: center;">判定结果</th>
+                        <th style="padding: 10px; text-align: center;">恶意风险</th>
+                        <th style="padding: 10px; text-align: center;">来源</th>
+                        <th style="padding: 10px; text-align: center;">详情</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in results %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px; word-break: break-all; max-width: 300px;">
+                            <a href="{{ item.url }}" target="_blank" style="color: #333; text-decoration: none;">{{
+                                item.url }}</a>
+                        </td>
+                        <td style="padding: 10px; text-align: center;">
+                            <span
+                                style="background: {{ item.color }}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">
+                                {{ item.status }}
+                            </span>
+                        </td>
+                        <td style="padding: 10px; text-align: center;">
+                            <div
+                                style="background: #eee; height: 8px; width: 100px; border-radius: 4px; display: inline-block; vertical-align: middle;">
+                                <div
+                                    style="background: {{ item.color }}; width: {{ item.score }}%; height: 100%; border-radius: 4px;">
+                                </div>
+                            </div>
+                            <span style="font-size: 0.8em; margin-left: 5px;">{{ item.score }}%</span>
+                        </td>
+                        <td style="padding: 10px; text-align: center; font-size: 0.9em;">
+                            {% if '数据库' in item.source %}
+                            <span style="color: #6610f2; font-weight: bold;">{{ item.source }}</span>
+                            {% elif '白名单' in item.source or '黑名单' in item.source %}
+                            <span style="color: #d63384; font-weight: bold;">{{ item.source }}</span>
+                            {% else %}
+                            <span style="color: #0d6efd;">{{ item.source }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 10px; text-align: center;">
+                            {% if item.id %}
+                            <a href="/detail/{{ item.id }}" target="_blank"
+                                style="color: #007bff; text-decoration: none;">查看</a>
+                            {% else %}
+                            <span style="color: #ccc;">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

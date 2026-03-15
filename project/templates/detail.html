@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>检测详情</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f2f5; padding: 20px; }
+        .container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f9f9f9; }
+        .label { font-weight: bold; color: #555; }
+        .tag { padding: 4px 8px; border-radius: 4px; color: white; }
+        .malicious { background: #dc3545; }
+        .benign { background: #28a745; }
+        .feature-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        .back-btn { display: inline-block; margin-top: 20px; text-decoration: none; color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🔍 深度检测报告</h2>
+        
+        <div class="row">
+            <span class="label">目标网址:</span>
+            <span style="word-break: break-all;">{{ record.url }}</span>
+        </div>
+        <div class="row">
+            <span class="label">检测时间:</span>
+            <span>{{ record.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+        </div>
+        <div class="row">
+            <span class="label">判定结果:</span>
+            <span class="tag {{ 'malicious' if record.result == '恶意' else 'benign' }}">
+                {{ record.result }}
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">恶意风险值:</span>
+            <strong style="color: {{ '#dc3545' if record.score > 50 else '#28a745' }}">
+                {{ "%.2f"|format(record.score) }}%
+            </strong>
+        </div>
+
+        <h3>🧬 原始特征数据</h3>
+        <div class="feature-box">
+            {% if features %}
+                <table style="width: 100%; border-collapse: collapse;">
+                    {% for key, value in features.items() %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 8px;">{{ key }}</td>
+                        <td style="padding: 8px; font-family: monospace; text-align: right;">{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p style="color: #999; text-align: center;">暂无特征数据</p>
+            {% endif %}
+        </div>
+
+        <a href="javascript:history.back()" class="back-btn">⬅️ 返回上一页</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>检测历史记录</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: white;
+        }
+
+        .malicious {
+            background: #dc3545;
+        }
+
+        .benign {
+            background: #28a745;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .btn-del {
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .btn-del:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-clear {
+            background: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+
+        /* 新增：分数的样式 */
+        .score-high {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* 高风险红字 */
+        .score-low {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* 低风险绿字 */
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/">⬅️ 返回检测大厅</a>
+            <a href="/delete_all_records" class="btn-clear" onclick="return confirm('确定要清空所有记录吗？');">🗑️ 清空所有记录</a>
+        </div>
+
+        <h2>🕒 我的检测历史</h2>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">{{
+            message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <table>
+            <thead>
+                <tr style="background: #f8f9fa;">
+                    <th width="15%">时间</th>
+                    <th width="30%">网址</th>
+                    <th width="15%">风险评分</th>
+                    <th width="15%">结果</th>
+                    <th width="10%">详情</th>
+                    <th width="15%">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td style="color: #666; font-size: 0.9em;">{{ record.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+
+                    <td style="word-break: break-all;">
+                        <a href="{{ record.url }}" target="_blank" style="color: #333;">{{ record.url }}</a>
+                    </td>
+
+                    <td>
+                        {% if record.score is not none %}
+                        <span class="{{ 'score-high' if record.score > 50 else 'score-low' }}">
+                            {{ "%.2f"|format(record.score) }}%
+                        </span>
+                        {% else %}
+                        <span style="color: #999;">-</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <span class="tag {{ 'malicious' if record.result == '恶意' else 'benign' }}">
+                            {{ record.result }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <a href="/detail/{{ record.id }}" style="color: #007bff; text-decoration: none;">📄 查看</a>
+                    </td>
+
+                    <td>
+                        <a href="/delete_record/{{ record.id }}" class="btn-del">删除</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 30px; color: #999;">暂无历史记录，快去检测几个网页吧！</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
