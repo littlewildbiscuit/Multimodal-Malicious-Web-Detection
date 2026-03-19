@@ -1,4 +1,4 @@
-# 🛡️ 多模态恶意网页检测系统 (Multimodal Malicious Web Detection)
+# 多模态恶意网页检测系统 (Multimodal Malicious Web Detection)
 
 > **多维特征 | 智能检测 | Web可视化** —— 旨在通过综合研判网页的文本与视觉特征，实现对恶意网页的高效拦截。
 
@@ -64,7 +64,7 @@ sudo playwright install-deps
 python app.py
 ```
 
-> **💡 提示**：首次运行程序时，系统会自动在 `instance/` 目录下生成 `database.db` 数据库文件，无需手动配置 SQL 环境。
+> **提示**：首次运行程序时，系统会自动在 `instance/` 目录下生成 `database.db` 数据库文件，无需手动配置 SQL 环境。
 
 程序启动后，请在浏览器中访问 `http://127.0.0.1:80` (或服务器的实际 IP)。
 
